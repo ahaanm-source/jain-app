@@ -1,6 +1,10 @@
 import express from 'express';
 import Anthropic from '@anthropic-ai/sdk';
 import Database from 'better-sqlite3';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.use(express.json());
@@ -153,6 +157,11 @@ app.post('/api/convert', async (req, res) => {
     end(err.message);
   }
 });
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(join(__dirname, 'dist')));
+  app.get('*', (_req, res) => res.sendFile(join(__dirname, 'dist', 'index.html')));
+}
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`));
