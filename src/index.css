@@ -1,55 +1,613 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
-@import "leaflet/dist/leaflet.css";
 
-@layer base {
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
+:root {
+  --bg:      #fefcf8;
+  --bg-sub:  #f4ede0;
+  --bg-card: #ece4d5;
+  --bg-hover:#e4daccl;
+  --text:    #2d2924;
+  --sub:     #a09488;
+  --accent:  #d4820e;
+  --green:   #2a9d5c;
+  --error:   #dc2626;
+  --border:  rgba(180,140,80,0.15);
+  --shadow:  0 4px 20px rgba(180,130,60,0.1);
+  --shadow-sm: 0 2px 8px rgba(180,130,60,0.08);
+  --radius:  20px;
+}
 
-  html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    margin: 0;
-    padding: 0;
-    background: #f5f5f7;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
+html { -webkit-font-smoothing: antialiased; }
 
-  #root {
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100svh;
+}
+
+#root { min-height: 100svh; display: flex; flex-direction: column; }
+
+/* ── Root layout ─────────────────────────────── */
+
+.rc-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+/* ── Header ──────────────────────────────────── */
+
+.rc-header {
+  padding: 40px 24px 0;
+  text-align: center;
+}
+
+.rc-logo {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.rc-dot { color: var(--accent); }
+
+/* ── Nav tabs ────────────────────────────────── */
+
+.rc-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 28px 24px 0;
+}
+
+.rc-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 100px;
+  color: var(--sub);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.rc-tab:hover {
+  color: var(--text);
+  background: var(--bg-sub);
+}
+
+.rc-tab.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(212, 130, 14, 0.07);
+}
+
+.rc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 99px;
+}
+
+/* ── Main ────────────────────────────────────── */
+
+.rc-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 36px 24px 80px;
+  gap: 24px;
+}
+
+.rc-subtitle {
+  color: var(--sub);
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-align: center;
+  max-width: 440px;
+  line-height: 1.6;
+}
+
+/* ── Sections ────────────────────────────────── */
+
+.rc-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rc-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sub);
+}
+
+/* ── Mode buttons ────────────────────────────── */
+
+.rc-modes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rc-mode-btn {
+  padding: 10px 22px;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  color: var(--sub);
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rc-mode-btn:hover {
+  color: var(--text);
+  border-color: rgba(180,140,80,0.3);
+  background: var(--bg-sub);
+}
+
+.rc-mode-btn.active {
+  background: rgba(212, 130, 14, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Input wrap ──────────────────────────────── */
+
+.rc-input-wrap {
+  width: 100%;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.rc-input-wrap:focus-within {
+  border-color: rgba(212, 130, 14, 0.5);
+  box-shadow: 0 4px 24px rgba(212, 130, 14, 0.12);
+}
+
+.rc-textarea {
+  width: 100%;
+  padding: 18px 20px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.7;
+  caret-color: var(--accent);
+}
+
+.rc-textarea::placeholder { color: var(--sub); opacity: 0.6; font-weight: 400; }
+.rc-textarea:disabled { opacity: 0.4; cursor: not-allowed; }
+.rc-textarea--short { min-height: unset; }
+
+.rc-input-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1.5px solid var(--border);
+  background: rgba(244, 237, 224, 0.4);
+}
+
+.rc-hint {
+  font-size: 0.76rem;
+  color: var(--sub);
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+/* ── Convert / action buttons ────────────────── */
+
+.rc-convert-btn {
+  padding: 10px 26px;
+  background: var(--accent);
+  border: none;
+  border-radius: 100px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.12s, box-shadow 0.15s;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(212, 130, 14, 0.35);
+}
+
+.rc-convert-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  box-shadow: 0 6px 20px rgba(212, 130, 14, 0.4);
+}
+.rc-convert-btn:active:not(:disabled) { transform: scale(0.97); }
+.rc-convert-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
+.rc-convert-btn.busy { opacity: 0.7; cursor: default; }
+
+/* loading dots */
+.rc-dots { display: flex; gap: 5px; align-items: center; }
+.rc-dots span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  animation: blink 1.2s ease-in-out infinite;
+}
+.rc-dots span:nth-child(2) { animation-delay: 0.2s; }
+.rc-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
+}
+
+/* ── Error ───────────────────────────────────── */
+
+.rc-error {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(220, 38, 38, 0.07);
+  border: 1.5px solid rgba(220, 38, 38, 0.2);
+  border-radius: 14px;
+  color: var(--error);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ── Output ──────────────────────────────────── */
+
+.rc-output-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rc-save-btn {
+  padding: 8px 18px;
+  background: transparent;
+  border: 2px solid var(--green);
+  border-radius: 100px;
+  color: var(--green);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.rc-save-btn:hover:not(:disabled) {
+  background: rgba(42, 157, 92, 0.08);
+}
+.rc-save-btn.saved {
+  opacity: 0.45;
+  cursor: default;
+  border-color: var(--sub);
+  color: var(--sub);
+}
+
+.rc-output {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  font-size: 0.97rem;
+  line-height: 1.85;
+  box-shadow: var(--shadow-sm);
+}
+
+.out-heading {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-top: 22px;
+  margin-bottom: 4px;
+}
+.out-heading:first-child { margin-top: 0; }
+.out-line { color: var(--text); }
+.out-line strong { font-weight: 700; color: var(--text); }
+.out-spacer { height: 8px; }
+
+/* ── Saved tab controls ──────────────────────── */
+
+.rc-saved-controls {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.rc-search {
+  flex: 1;
+  padding: 12px 18px;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.rc-search:focus {
+  border-color: rgba(212, 130, 14, 0.45);
+  box-shadow: 0 4px 16px rgba(212, 130, 14, 0.1);
+}
+.rc-search::placeholder { color: var(--sub); font-weight: 400; }
+
+.rc-cuisine-select {
+  padding: 12px 16px;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s;
+}
+.rc-cuisine-select:focus { border-color: rgba(212, 130, 14, 0.45); }
+
+.rc-empty {
+  color: var(--sub);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 56px 0;
+  line-height: 1.7;
+}
+
+/* ── Recipe cards ────────────────────────────── */
+
+.rc-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.rc-card {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.18s, border-color 0.18s;
+}
+.rc-card:hover {
+  box-shadow: var(--shadow);
+  border-color: rgba(212, 130, 14, 0.2);
+}
+
+.rc-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.rc-card-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.rc-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--sub);
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: color 0.12s, background 0.12s;
+}
+.rc-delete-btn:hover { color: var(--error); background: rgba(220, 38, 38, 0.08); }
+
+.rc-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rc-mode-tag {
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+.rc-mode-tag.mode-jain  { background: rgba(212,130,14,0.12); color: var(--accent); }
+.rc-mode-tag.mode-vegan { background: rgba(42,157,92,0.1);   color: var(--green); }
+.rc-mode-tag.mode-both  { background: rgba(109,77,190,0.1);  color: #7c5cbf; }
+
+.rc-cuisine-tag {
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  background: var(--bg-sub);
+  color: var(--sub);
+}
+
+.rc-card-date {
+  font-size: 0.8rem;
+  color: var(--sub);
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.rc-expand-btn {
+  background: transparent;
+  border: none;
+  color: var(--sub);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: color 0.12s;
+}
+.rc-expand-btn:hover { color: var(--accent); }
+
+.rc-card-content {
+  padding-top: 14px;
+  border-top: 1.5px solid var(--border);
+  font-size: 0.94rem;
+  line-height: 1.85;
+}
+
+/* ── Output actions ──────────────────────────── */
+
+.rc-output-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rc-print-btn {
+  padding: 8px 18px;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  color: var(--sub);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rc-print-btn:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* ── Servings scaler ─────────────────────────── */
+
+.rc-scale-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rc-scale-label {
+  font-size: 0.92rem;
+  color: var(--sub);
+  font-weight: 600;
+}
+
+.rc-scale-input {
+  width: 72px;
+  padding: 9px 12px;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  outline: none;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s;
+}
+.rc-scale-input:focus { border-color: rgba(212, 130, 14, 0.45); }
+.rc-scale-input:disabled { opacity: 0.4; }
+
+.rc-scale-btn {
+  padding: 9px 22px;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  color: var(--sub);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+}
+.rc-scale-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(212, 130, 14, 0.06);
+}
+.rc-scale-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ── Print styles ────────────────────────────── */
+
+@media print {
+  body * { visibility: hidden; }
+  #print-area, #print-area * { visibility: visible; }
+  #print-area {
+    position: fixed;
+    top: 0; left: 0;
     width: 100%;
-    max-width: 100%;
-    margin: 0;
-    text-align: left;
+    padding: 40px;
+    font-size: 13pt;
+    line-height: 1.8;
     border: none;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
+    box-shadow: none;
   }
+  .out-heading { color: #000; font-size: 14pt; }
 }
 
-@layer utilities {
-  .list-scroll::-webkit-scrollbar { width: 0px; }
-}
+/* ── Footer ──────────────────────────────────── */
 
-/* Leaflet overrides */
-.leaflet-container {
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  background: #f5f5f7;
-}
-.leaflet-popup-content-wrapper {
-  border-radius: 16px !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
-  border: none !important;
-}
-.leaflet-popup-tip {
-  box-shadow: none !important;
-}
-.leaflet-popup-content {
-  margin: 14px 16px !important;
-}
-.leaflet-control-attribution {
-  font-size: 10px !important;
+.rc-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 0.78rem;
+  color: var(--sub);
+  opacity: 0.4;
+  letter-spacing: 0.05em;
+  font-weight: 600;
 }
