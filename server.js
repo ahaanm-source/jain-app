@@ -1,43 +1,41 @@
 import express from 'express';
 import Anthropic from '@anthropic-ai/sdk';
-import Database from 'better-sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import fs from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.use(express.json());
 
-const db = new Database('recipes.db');
-db.exec(`
-  CREATE TABLE IF NOT EXISTS recipes (
-    id        INTEGER PRIMARY KEY AUTOINCREMENT,
-    name      TEXT NOT NULL,
-    cuisine   TEXT NOT NULL,
-    mode      TEXT NOT NULL,
-    content   TEXT NOT NULL,
-    saved_at  TEXT NOT NULL
-  )
-`);
+const DB_FILE = join(__dirname, 'recipes.json');
+
+function readDB() {
+  try { return JSON.parse(fs.readFileSync(DB_FILE, 'utf8')); }
+  catch { return []; }
+}
+
+function writeDB(recipes) {
+  fs.writeFileSync(DB_FILE, JSON.stringify(recipes, null, 2));
+}
 
 app.get('/api/recipes', (_req, res) => {
-  const rows = db.prepare('SELECT * FROM recipes ORDER BY saved_at DESC').all();
-  res.json(rows);
+  res.json(readDB());
 });
 
 app.post('/api/recipes', (req, res) => {
   const { name, cuisine, mode, content } = req.body;
   if (!name || !mode || !content) return res.status(400).json({ error: 'missing fields' });
-  const saved_at = new Date().toISOString();
-  const result = db.prepare(
-    'INSERT INTO recipes (name, cuisine, mode, content, saved_at) VALUES (?, ?, ?, ?, ?)'
-  ).run(name, cuisine || 'Other', mode, content, saved_at);
-  res.json({ id: result.lastInsertRowid, name, cuisine, mode, content, saved_at });
+  const recipe = { id: Date.now(), name, cuisine: cuisine || 'Other', mode, content, saved_at: new Date().toISOString() };
+  const recipes = [recipe, ...readDB()];
+  writeDB(recipes);
+  res.json(recipe);
 });
 
 app.delete('/api/recipes/:id', (req, res) => {
-  db.prepare('DELETE FROM recipes WHERE id = ?').run(req.params.id);
+  const recipes = readDB().filter(r => String(r.id) !== req.params.id);
+  writeDB(recipes);
   res.json({ ok: true });
 });
 
